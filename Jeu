@@ -1,0 +1,697 @@
+html
+<!DOCTYPE html>
+<html lang="fr" class="h-full select-none">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>L'Univers Éducatif d'Aminé 🌟</title>
+    
+    <!-- Police Google Fredoka -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* RESET & BASE */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Fredoka', cursive, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --border-card: #334155;
+            --neon-pink: #ff007f;
+            --neon-cyan: #00f5d4;
+            --neon-yellow: #ffee32;
+            --neon-purple: #b5179e;
+            --neon-green: #52b788;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #f8fafc;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* FLEX & GRID UTILITIES */
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .flex-1 { flex: 1; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-around { justify-content: space-around; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .hidden { display: none !important; }
+        .w-full { width: 100%; }
+        .h-full { height: 100%; }
+        .text-center { text-align: center; }
+
+        /* HEADER & NAVIGATION */
+        header {
+            background: #1e293b;
+            border-bottom: 2px solid #334155;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 20;
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #0f172a;
+            padding: 0.4rem 1rem 0.4rem 0.4rem;
+            border-radius: 999px;
+            border: 2px solid #334155;
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            box-shadow: 0 0 10px rgba(255,0,127,0.4);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.6rem;
+            overflow-x: auto;
+            padding: 0.2rem;
+            max-width: 60%;
+        }
+
+        .nav-btn {
+            background: #0f172a;
+            color: #94a3b8;
+            border: 2px solid #334155;
+            padding: 0.6rem 1.2rem;
+            border-radius: 1.2rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn.active {
+            background: var(--neon-cyan);
+            color: #0f172a;
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0,245,212,0.4);
+            transform: translateY(-2px);
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 0.9rem 1.8rem;
+            border-radius: 1.2rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.3);
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+        }
+
+        .btn-pink { background: linear-gradient(135deg, #ff007f, #d6006e); color: white; }
+        .btn-cyan { background: linear-gradient(135deg, #00f5d4, #00bbf9); color: #0f172a; }
+        .btn-yellow { background: linear-gradient(135deg, #ffee32, #f15bb5); color: #0f172a; }
+        .btn-slate { background: #334155; color: #f8fafc; border: 2px solid #475569; }
+
+        /* CARDS & CONTAINERS */
+        .card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-card);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        /* POP-IT GRID */
+        .popit-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem;
+            padding: 1.5rem;
+            background: #1e293b;
+            border-radius: 2.5rem;
+            border: 3px solid #334155;
+            max-width: 380px;
+            margin: 0 auto;
+        }
+
+        .popit-bubble {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: inset 0 -6px 0 rgba(0,0,0,0.35), 0 6px 12px rgba(0,0,0,0.4);
+            transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .popit-bubble.popped {
+            transform: scale(0.82);
+            box-shadow: inset 0 5px 8px rgba(0,0,0,0.7);
+            opacity: 0.55;
+        }
+
+        /* LEVEL MAP */
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+
+        .level-node {
+            height: 75px;
+            border-radius: 1.5rem;
+            font-weight: 800;
+            font-size: 1.4rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #0f172a;
+            border: 3px solid #334155;
+            color: #475569;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .level-node.unlocked {
+            background: #1e293b;
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0,245,212,0.25);
+        }
+
+        .level-node.current {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 0, 127, 0.6); }
+            50% { box-shadow: 0 0 0 16px rgba(255, 0, 127, 0); }
+        }
+
+        /* INPUT STYLES */
+        .custom-input {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 1.2rem;
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
+            margin-top: 0.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .custom-input:focus {
+            border-color: var(--neon-cyan);
+        }
+
+        /* DRAWING CANVAS */
+        #paintCanvas {
+            background: #0f172a;
+            border-radius: 1.5rem;
+            border: 3px solid #334155;
+            touch-action: none;
+            cursor: crosshair;
+        }
+
+        /* CAROUSEL CARDS FOR 1-3 YEARS */
+        .toddler-card {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 3px solid var(--neon-pink);
+            border-radius: 2rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .toddler-card:active { transform: scale(0.95); }
+
+    </style>
+</head>
+<body>
+
+    <!-- AUTHENTICATION / AUTH MODAL -->
+    <div id="authScreen" class="fixed inset-0 bg-dark/95 z-50 flex items-center justify-center p-4" style="position:fixed; inset:0; background:rgba(15,23,42,0.98); z-index:99; display:flex; align-items:center; justify-center:center; padding:1rem;">
+        <div class="card w-full" style="max-width: 440px; text-align:center;">
+            <div style="font-size: 4rem; margin-bottom: 0.5rem;">🦄</div>
+            <h2 style="font-size: 2rem; color: var(--neon-cyan); margin-bottom: 0.5rem;">Bienvenue !</h2>
+            <p style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 1.5rem;">Crée un compte pour sauvegarder tes 50 niveaux !</p>
+            
+            <form onsubmit="handleAuth(event)" style="text-align: left;">
+                <label style="font-size: 0.85rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Prénom de l'enfant</label>
+                <input type="text" id="authName" value="Aminé" class="custom-input" required>
+                
+                <label style="font-size: 0.85rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Email inventé</label>
+                <input type="email" id="authEmail" value="aminedemirel2023@demirelapp.zka" class="custom-input" required>
+                
+                <label style="font-size: 0.85rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Mot de passe</label>
+                <input type="password" id="authPass" value="123456" class="custom-input" required>
+
+                <label style="font-size: 0.85rem; font-weight:700; color:#94a3b8; text-transform:uppercase;">Tranche d'Âge</label>
+                <select id="authAge" class="custom-input" style="background:#0f172a; color:white;">
+                    <option value="1-3" selected>👶 1 à 3 ans (Aminé - Éveil, Pommes & Pop-It)</option>
+                    <option value="4-6">🧒 4 à 6 ans (Maternelle)</option>
+                    <option value="7-9">👦 7 à 9 ans (Primaire)</option>
+                    <option value="10-13">🧑 10 à 13 ans (Collège)</option>
+                    <option value="14-18">🎓 14 à 18 ans (Avancé)</option>
+                </select>
+
+                <button type="submit" class="btn btn-pink w-full" style="width:100%; margin-top:0.5rem; font-size:1.2rem;">Commencer l'Aventure 🚀</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN HEADER NAVIGATION -->
+    <header>
+        <div class="user-pill">
+            <div class="avatar">👧</div>
+            <div>
+                <div id="headerName" style="font-weight:700; color:var(--neon-cyan); font-size:1rem; line-height:1.1;">Aminé</div>
+                <div style="display:flex; gap:0.4rem; align-items:center; margin-top:2px;">
+                    <span id="headerAge" style="background:#b5179e33; color:var(--neon-pink); font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:10px; border:1px solid var(--neon-pink);">1-3 ans</span>
+                    <span id="headerLvl" style="background:#ffee3222; color:var(--neon-yellow); font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:10px;">Niv. 1</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scrollable Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button onclick="switchTab('map')" id="tab-map" class="nav-btn active">🗺️ Carte (50)</button>
+            <button onclick="switchTab('toddler')" id="tab-toddler" class="nav-btn">👶 Eveil (1-3 ans)</button>
+            <button onclick="switchTab('popit')" id="tab-popit" class="nav-btn">🎈 Pop-It</button>
+            <button onclick="switchTab('draw')" id="tab-draw" class="nav-btn">🎨 Dessin</button>
+            <button onclick="switchTab('jobs')" id="tab-jobs" class="nav-btn">💼 9 Métiers</button>
+        </nav>
+
+        <button onclick="logout()" class="btn btn-slate" style="padding:0.6rem 0.9rem; font-size:0.9rem;">🔒 Sortir</button>
+    </header>
+
+    <!-- CONTENT VIEWS CONTAINER -->
+    <main class="flex-1" style="position:relative; overflow:hidden; display:flex; flex-direction:column;">
+
+        <!-- 1. MAP DE 50 NIVEAUX -->
+        <section id="view-map" class="flex-1" style="overflow-y:auto; padding:1.5rem; max-width:900px; margin:0 auto; width:100%;">
+            <div class="text-center" style="margin-bottom: 1.5rem;">
+                <h1 style="font-size:2rem; color:var(--neon-pink);">📍 Parcours d'Apprentissage</h1>
+                <p style="color:#94a3b8; font-size:1rem; margin-top:0.2rem;">Complète les 50 niveaux pour gagner des étoiles !</p>
+            </div>
+            <div id="mapContainer" class="map-grid card"></div>
+        </section>
+
+        <!-- 2. MODULE ÉVEIL SPÉCIAL 1-3 ANS (AMINÉ) -->
+        <section id="view-toddler" class="flex-1 hidden" style="overflow-y:auto; padding:1.5rem; max-width:800px; margin:0 auto; width:100%;">
+            <div class="text-center" style="margin-bottom: 1.5rem;">
+                <h2 style="font-size:2rem; color:var(--neon-yellow);">🍎 Module Éveil & Couleurs</h2>
+                <p style="color:#94a3b8;">Touche une carte pour écouter le son !</p>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1.2rem;">
+                <!-- Animaux -->
+                <div class="toddler-card" onclick="playToddlerSound('Chat', '🐱 Le chat fait : Miaou !')">
+                    <div style="font-size:4rem;">🐱</div>
+                    <h3 style="color:var(--neon-cyan); margin-top:0.5rem;">Le Chat</h3>
+                </div>
+                <div class="toddler-card" onclick="playToddlerSound('Chien', '🐶 Le chien fait : Ouaf ouaf !')">
+                    <div style="font-size:4rem;">🐶</div>
+                    <h3 style="color:var(--neon-yellow); margin-top:0.5rem;">Le Chien</h3>
+                </div>
+                <div class="toddler-card" onclick="playToddlerSound('Vache', '🐮 La vache fait : Meuh !')">
+                    <div style="font-size:4rem;">🐮</div>
+                    <h3 style="color:var(--neon-pink); margin-top:0.5rem;">La Vache</h3>
+                </div>
+
+                <!-- Couleurs -->
+                <div class="toddler-card" style="border-color:#ff007f;" onclick="playToddlerSound('Rouge', '🔴 C\'est la couleur Rouge !')">
+                    <div style="font-size:4rem;">🔴</div>
+                    <h3 style="color:#ff007f; margin-top:0.5rem;">Rouge</h3>
+                </div>
+                <div class="toddler-card" style="border-color:#00f5d4;" onclick="playToddlerSound('Bleu', '🔵 C\'est la couleur Bleue !')">
+                    <div style="font-size:4rem;">🔵</div>
+                    <h3 style="color:#00f5d4; margin-top:0.5rem;">Bleu</h3>
+                </div>
+                <div class="toddler-card" style="border-color:#ffee32;" onclick="playToddlerSound('Jaune', '🟡 C\'est la couleur Jaune !')">
+                    <div style="font-size:4rem;">🟡</div>
+                    <h3 style="color:#ffee32; margin-top:0.5rem;">Jaune</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. POP-IT ANTI-STRESS -->
+        <section id="view-popit" class="flex-1 hidden" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem;">
+            <div class="text-center" style="margin-bottom:1.5rem;">
+                <h2 style="font-size:2rem; color:var(--neon-yellow);">🎈 Pop-It Magique Tactile</h2>
+                <p style="color:#94a3b8;">Éclate toutes les bulles de couleur !</p>
+            </div>
+
+            <div id="popitGrid" class="popit-board"></div>
+
+            <button onclick="resetPopit()" class="btn btn-cyan" style="margin-top:2rem;">
+                🔄 Recharger le Pop-It
+            </button>
+        </section>
+
+        <!-- 4. STUDIO DE DESSIN NÉON -->
+        <section id="view-draw" class="flex-1 hidden" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1rem;">
+            <div style="display:flex; gap:0.8rem; margin-bottom:0.8rem; align-items:center;">
+                <button onclick="setCanvasColor('#ff007f')" class="btn" style="background:#ff007f; width:45px; height:45px; border-radius:50%; padding:0;"></button>
+                <button onclick="setCanvasColor('#00f5d4')" class="btn" style="background:#00f5d4; width:45px; height:45px; border-radius:50%; padding:0;"></button>
+                <button onclick="setCanvasColor('#ffee32')" class="btn" style="background:#ffee32; width:45px; height:45px; border-radius:50%; padding:0;"></button>
+                <button onclick="setCanvasColor('#ffffff')" class="btn" style="background:#ffffff; width:45px; height:45px; border-radius:50%; padding:0;"></button>
+                <button onclick="clearCanvas()" class="btn btn-slate" style="padding:0.5rem 1rem; font-size:0.9rem;">🗑️ Effacer</button>
+            </div>
+
+            <canvas id="paintCanvas" width="600" height="400" style="max-width:100%; height:auto;"></canvas>
+        </section>
+
+        <!-- 5. LES 9 MÉTIERS -->
+        <section id="view-jobs" class="flex-1 hidden" style="overflow-y:auto; padding:1.5rem; max-width:900px; margin:0 auto; width:100%;">
+            <div class="text-center" style="margin-bottom: 1.5rem;">
+                <h2 style="font-size:2rem; color:var(--neon-cyan);">💼 Découvre les 9 Métiers</h2>
+                <p style="color:#94a3b8;">Touche un métier pour l'explorer !</p>
+            </div>
+            <div id="jobsGridContainer" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:1.2rem;"></div>
+        </section>
+
+        <!-- 6. ECRAN DE JEU INTERACTIF (POUR NIVEAUX DE LA CARTE) -->
+        <section id="view-game" class="flex-1 hidden" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem; max-width:600px; margin:0 auto; width:100%;">
+            <div class="card w-full" style="text-align:center;">
+                <div style="display:flex; justify-between:space-between; align-items:center; margin-bottom:1.5rem;">
+                    <button onclick="switchTab('map')" class="btn btn-slate" style="padding:0.4rem 0.8rem; font-size:0.85rem;">⬅️ Retour</button>
+                    <span id="gameLvlTitle" style="font-weight:700; color:var(--neon-yellow); font-size:1.2rem;">Niveau 1</span>
+                    <button onclick="repeatInstruction()" class="btn btn-yellow" style="padding:0.4rem 0.8rem; font-size:0.85rem;">🔊 Voix</button>
+                </div>
+
+                <div id="gameDynamicContent" style="min-height:220px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                    <!-- Game content rendered here -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SCRIPT DE LOGIQUE APPLICATIVE -->
+    <script>
+        // CAREERS DATABASE
+        const CAREERS = [
+            { title: 'Informatique / Développeur', icon: '💻', color: 'var(--neon-cyan)', desc: 'Crée des jeux vidéo et des applications magiques sur tablette !' },
+            { title: 'Vendeur / Commerçant', icon: '🛍️', color: 'var(--neon-yellow)', desc: 'Accueille les clients et prépare de jolies commandes.' },
+            { title: 'Médecin / Docteur', icon: '🩺', color: 'var(--neon-pink)', desc: 'Soigne et prend soin de la santé des enfants.' },
+            { title: 'Pompier', icon: '🚒', color: '#ef4444', desc: 'Éteint les feux et secourt les personnes avec le grand camion !' },
+            { title: 'Astronaute', icon: '🚀', color: 'var(--neon-purple)', desc: 'Voyage dans les étoiles et flotte dans l\'espace.' },
+            { title: 'Enseignant / Maître', icon: '📚', color: 'var(--neon-green)', desc: 'Apprend à lire, écrire et compter avec le sourire.' },
+            { title: 'Artiste Peintre', icon: '🎨', color: 'var(--neon-pink)', desc: 'Dessine de magnifiques tableaux avec toutes les couleurs.' },
+            { title: 'Chef Cuisinier', icon: '👨‍🍳', color: 'var(--neon-yellow)', desc: 'Prépare de super gateaux et des plats délicieux.' },
+            { title: 'Policier', icon: '👮', color: 'var(--neon-cyan)', desc: 'Protège la ville et veille sur la sécurité de tous.' }
+        ];
+
+        let state = JSON.parse(localStorage.getItem('amine_app_session')) || null;
+        let currentLvlPlaying = 1;
+        let currentGameTarget = null;
+        let canvasColor = '#ff007f';
+
+        function handleAuth(e) {
+            e.preventDefault();
+            state = {
+                name: document.getElementById('authName').value,
+                email: document.getElementById('authEmail').value,
+                age: document.getElementById('authAge').value,
+                level: 1
+            };
+            localStorage.setItem('amine_app_session', JSON.stringify(state));
+            init();
+        }
+
+        function logout() {
+            localStorage.removeItem('amine_app_session');
+            location.reload();
+        }
+
+        function init() {
+            if (!state) {
+                document.getElementById('authScreen').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('authScreen').classList.add('hidden');
+
+            document.getElementById('headerName').innerText = state.name;
+            document.getElementById('headerAge').innerText = state.age + ' ans';
+            document.getElementById('headerLvl').innerText = 'Niv. ' + state.level;
+
+            renderMap();
+            renderPopit();
+            renderJobs();
+            initCanvas();
+            switchTab('map');
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            const view = document.getElementById(`view-${tabId}`);
+            if (view) view.classList.remove('hidden');
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'fr-FR';
+                u.rate = state && state.age === '1-3' ? 0.85 : 1.0;
+                window.speechSynthesis.speak(u);
+            }
+        }
+
+        /* 1. CARTE DES NIVEAUX */
+        function renderMap() {
+            const container = document.getElementById('mapContainer');
+            container.innerHTML = '';
+            for (let i = 1; i <= 50; i++) {
+                const node = document.createElement('div');
+                const isUnlocked = i <= state.level;
+                const isCurrent = i === state.level;
+                node.className = `level-node ${isUnlocked ? 'unlocked' : ''} ${isCurrent ? 'current' : ''}`;
+                node.innerText = isUnlocked ? i : '🔒';
+                if (isUnlocked) node.onclick = () => playLevel(i);
+                container.appendChild(node);
+            }
+        }
+
+        /* 2. JEU POP-IT TACTILE */
+        function renderPopit() {
+            const container = document.getElementById('popitGrid');
+            container.innerHTML = '';
+            const colors = ['#ff007f', '#00f5d4', '#ffee32', '#b5179e', '#52b788'];
+            for (let i = 0; i < 12; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'popit-bubble';
+                bubble.style.backgroundColor = colors[i % colors.length];
+                bubble.innerText = '✨';
+                bubble.onclick = () => {
+                    if (!bubble.classList.contains('popped')) {
+                        bubble.classList.add('popped');
+                        speak(state.age === '1-3' ? "Pop !" : "Bulle !");
+                    }
+                };
+                container.appendChild(bubble);
+            }
+        }
+        function resetPopit() {
+            renderPopit();
+            speak("Pop-it rechargé !");
+        }
+
+        /* 3. DESSIN CANVAS */
+        function initCanvas() {
+            const canvas = document.getElementById('paintCanvas');
+            const ctx = canvas.getContext('2d');
+            let drawing = false;
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return {
+                    x: (clientX - rect.left) * (canvas.width / rect.width),
+                    y: (clientY - rect.top) * (canvas.height / rect.height)
+                };
+            }
+
+            function start(e) { drawing = true; draw(e); }
+            function stop() { drawing = false; ctx.beginPath(); }
+            function draw(e) {
+                if (!drawing) return;
+                e.preventDefault();
+                const pos = getPos(e);
+                ctx.lineWidth = 10;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = canvasColor;
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+            }
+
+            canvas.addEventListener('mousedown', start);
+            canvas.addEventListener('mouseup', stop);
+            canvas.addEventListener('mousemove', draw);
+
+            canvas.addEventListener('touchstart', start, { passive: false });
+            canvas.addEventListener('touchend', stop);
+            canvas.addEventListener('touchmove', draw, { passive: false });
+        }
+        function setCanvasColor(c) { canvasColor = c; }
+        function clearCanvas() {
+            const canvas = document.getElementById('paintCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        /* 4. LES MÉTIERS */
+        function renderJobs() {
+            const container = document.getElementById('jobsGridContainer');
+            container.innerHTML = '';
+            CAREERS.forEach(job => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.cursor = 'pointer';
+                card.innerHTML = `
+                    <div style="font-size:3.5rem; margin-bottom:0.5rem;">${job.icon}</div>
+                    <h3 style="color:${job.color}; font-size:1.2rem; margin-bottom:0.4rem;">${job.title}</h3>
+                    <p style="color:#94a3b8; font-size:0.9rem;">${job.desc}</p>
+                `;
+                card.onclick = () => speak(`Métier : ${job.title}. ${job.desc}`);
+                container.appendChild(card);
+            });
+        }
+
+        /* 5. ÉVEIL SONORE 1-3 ANS */
+        function playToddlerSound(title, text) {
+            speak(text);
+        }
+
+        /* 6. MOTEUR DE JEU DE NIVEAU (ADAPTÉ POUR 3 ANS ET ENFANTS PLUS ÂGÉS) */
+        function playLevel(lvl) {
+            currentLvlPlaying = lvl;
+            document.getElementById('gameLvlTitle').innerText = `Niveau ${lvl}`;
+            switchTab('game');
+
+            const container = document.getElementById('gameDynamicContent');
+            container.innerHTML = '';
+
+            if (state.age === '1-3') {
+                // Jeu de pommes hyper visuel (1 ou 2 pommes)
+                const count = (lvl % 2 === 1) ? 1 : 2;
+                currentGameTarget = count;
+
+                let apples = '';
+                for (let i = 0; i < count; i++) apples += '<span style="font-size:5rem; margin:0 0.5rem;">🍎</span>';
+
+                container.innerHTML = `
+                    <h3 style="font-size:1.5rem; color:var(--neon-pink); margin-bottom:1rem;">Combien y a-t-il de pommes ? 🍎</h3>
+                    <div style="margin:1.5rem 0;">${apples}</div>
+                    <div style="display:flex; gap:1.5rem; margin-top:1rem;">
+                        <button onclick="checkGameAns(1)" class="btn btn-pink" style="font-size:2rem; width:80px; height:80px;">1</button>
+                        <button onclick="checkGameAns(2)" class="btn btn-cyan" style="font-size:2rem; width:80px; height:80px;">2</button>
+                    </div>
+                `;
+                speak("Combien y a-t-il de pommes rouges ?");
+            } else {
+                // Jeu de calcul adapté aux plus grands
+                const n1 = Math.floor(Math.random() * 5) + 1;
+                const n2 = Math.floor(Math.random() * 5) + 1;
+                currentGameTarget = n1 + n2;
+
+                container.innerHTML = `
+                    <h3 style="font-size:1.5rem; color:var(--neon-yellow); margin-bottom:1rem;">Calcul</h3>
+                    <div style="font-size:3rem; color:var(--neon-cyan); margin:1rem 0;">${n1} + ${n2} = ?</div>
+                    <div style="display:flex; gap:1rem; margin-top:1rem;">
+                        <button onclick="checkGameAns(${currentGameTarget})" class="btn btn-pink" style="font-size:1.5rem;">${currentGameTarget}</button>
+                        <button onclick="checkGameAns(${currentGameTarget + 1})" class="btn btn-slate" style="font-size:1.5rem;">${currentGameTarget + 1}</button>
+                    </div>
+                `;
+                speak(`Combien font ${n1} plus ${n2} ?`);
+            }
+        }
+
+        function checkGameAns(ans) {
+            if (ans === currentGameTarget) {
+                if (typeof confetti === 'function') confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+                speak(`Bravo ${state.name} ! Tu as réussi !`);
+
+                if (currentLvlPlaying === state.level && state.level < 50) {
+                    state.level++;
+                    localStorage.setItem('amine_app_session', JSON.stringify(state));
+                    document.getElementById('headerLvl').innerText = 'Niv. ' + state.level;
+                    renderMap();
+                }
+                setTimeout(() => switchTab('map'), 1600);
+            } else {
+                speak("Essaie encore une fois !");
+            }
+        }
+
+        function repeatInstruction() {
+            if (state.age === '1-3') speak("Compte bien les pommes rouges !");
+            else speak("Trouve la bonne réponse !");
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
